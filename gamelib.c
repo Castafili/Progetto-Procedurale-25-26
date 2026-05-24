@@ -15,7 +15,7 @@ static int n_giocatori = 0;
 static Zona_mondoreale *prima_zona_mondoreale = NULL;
 static Zona_soprasotto *prima_zona_soprasotto = NULL;
 static int mappa_chiusa = 0; // Non chiusa (1 -> chiusa)
-static int gioco_impostat = 0; // Come sopr
+static int gioco_impostato = 0; // Come sopr
 static char vincitori_precedenti[3][50] = {"", "", ""}; 
 static int n_vincitori = 0;
 
@@ -332,5 +332,218 @@ static void inserisci_zona() {
 
 
 static void cancella_zona() {
+    int posizione; 
+    int n_zone = conta_zone_mondoreale();
+
+    if (n_zone == 0) {
+        printf("Non ci sono zone da cancellare!\n", AC_YELLOW, AC_NORMAL);
+        return;
+    }
+
+    printf("\nQuale zona vuoi cancellare? (1-%d): ", n_zone);
+    if (scanf("%d", &posizione) != 1 || posizione < 1 || posizione > n_zone) {
+        printf("Posizion non valida!\n", AC_RED, AC_NORMAL);
+        while (getchar() != '\n');
+        return;
+    }
+
+    // Trova zona da rimuovere nel Mondo Real
+    Zona_mondoreale *temp_mr = prima_zona_mondoreale;
+    for (int i = 1; i < posizione && temp_mr != NULL; i++) {
+        temp_mr = temp_mr -> avanti;
+    }
+
+    if (temp_mr == NULL) {
+        printf("Zona non trovta!", AC_RED, AC_NORMAL);
+        return;
+    }
+
+    // Trova la zona corrispondente nel Soprasotto
+    Zona_soprasotto *temp_ss = temp_mr -> link_soprasotto;
+
+    // Rimozzione da Mondo Reale
+    if (temp_mr -> indietro != NULL) {
+        temp_mr -> indietro -> avanti = temp_mr -> avanti;
+    } else {
+        prima_zona_mondoreale = temp_mr -> avanti;
+    }
+
+    if (temp_mr -> avanti != NULL) {
+        temp_mr -> avanti -> indietro = temp_mr -> indietro;
+    }
+
+    // Rimozzione da Soprasotto
+    if (temp_ss -> indietro != NULL) {
+        temp_ss -> indietro -> avanti = temp_ss -> avanti;
+    } else {
+        prima_zona_soprasotto = temp_ss -> avanti;
+    }
+
+    if (temp_ss -> avanti != NULL) {
+        temp_ss -> avanti -> indietro = temp_ss -> indietro;
+    }
+
+    // Liberazion memoria
+    free(temp_mr);
+    free(temp_ss);
+
+    printf("Zona cancellata con successo!\n");
+    mappa_chiusa = 0;
+
+}
+
+static void stampa_mappa() {
+    int scelta;
+    printf("\nQuale mappa vuoi stampare?\n");
+    printf("1) Mondo Real\n");
+    printf("2) Soprasotto\n");
+    printf("Scelta: ");
+
+    if (scanf("%d", &scelta) != 1 || (scelta != 1 && scelta != 2)) {
+        printf("Scelta non valida!\n", AC_RED, AC_NORMAL);
+        while (getchar() != '\n');
+        return;
+    }
+
+    if (scelta == 1) {
+        printf("\n=== Mappa Mondo Reale ===\n");
+        Zona_mondoreale *temp = prima_zona_mondoreale;
+        int i = 1;
+        while (temp != NULL) {
+            printf("\nZona %d:\n", i);
+            printf("  Tipo: %s\n", nome_tipo_zona(temp -> tipo));
+            printf("  Nemico: %s\n", nome_tipo_nemico(temp -> nemico));
+            printf("  Oggetto: %s\n", nome_tipo_oggetto(temp -> oggetto));
+            temp = temp -> avanti;
+            i++;
+        }
+    } else {
+        printf("\n=== Mappa Soprasotto ===\n");
+        Zona_soprasotto *temp = prima_zona_soprasotto;
+        int i = 1;
+        while (temp != NULL) {
+            printf("\nZona %d:\n", i);
+            printf("  Tipo: %s\n", nome_tipo_zona(temp -> tipo));
+            printf("  Nemico: %s\n", nome_tipo_nemico(temp -> nemico));
+            temp = temp -> avanti;
+            i++;
+        }
+    }
+
+}
+
+static void stampa_zona_specifica() {
+    int posizione;
+    int n_zone = conta_zone_mondorele();
+
+    if (n_zone == 0) {
+        printf("Non ci sono zone da stampare", AC_RED, AC_YELLOW);
+        return;
+    }
+
+    printf("\nQUale zona vuoi visualizzare? (1-%d): ", n_zone);
+    if (scanf("%d", posizione) != 1 || posizione < 1 || posizione > n_zone) {
+        printf("Posizione non vlida!\n", AC_RED, AC_NORMAL);
+        while (getchar() != '\n');
+        return;
+    }
+
+    // Trova la zona nel Mondo Reale
+    Zona_mondoreale *temp_mr = prima_zona_mondoreale;
+    for (int i = 1; i < posizione && temp_mr != NULL; i++) {
+        temp_mr = temp_mr -> avanti;
+    }
+
+    if (temp_mr == NULL) {
+        printf("Zona non trovata!", AC_RED, AC_NORMAL);
+        return;
+    }
+
+    Zona_soprasotto *temp_ss = temp_mr -> link_soprasotto;
+
+    printf("\n=== Zona %d - Mondo Reale ===\n", posizione);
+    printf("  Tipo: %s\n", nome_tipo_zona(temp_mr -> tipo));
+    printf("  Nemico: %s\n", nome_tipo_nemico(temp_mr -> nemico));
+    printf("  Oggetto: %s\n", nome_tipo_oggetto(temp_mr -> oggetto));
+
+    printf("\n=== Zona %d - Soprasotto ===\n", posizione);
+    printf("  Tipo: %s\n", nome_tipo(temp_ss -> tipo));
+    printf("  Nemico: %s\n", nome_tipo_nemico(temp_ss -> nemico));
+}
+
+static void chiudi_mappa() {
+    int n_zone = conta_zone_mondorale();
+    int n_demotorzone = conta_demotorzone();
+
+    if (n_zone <15) {
+        printf("Errore! ci devono essere almeno 15 zone. Attualmente ce ne sono %d.\n", n_zone, AC_RED, AC_NORMAL);
+        return;
+    }
+
+    if (n_demotorzone != 1) {
+        printf("Errore! Dev esserci esattamente 1 Demotorzone. Attalemente ce ne sono %d.\n", n_demotorzone, AC_RED, AC_NORMAL);
+    }
+
+    mappa_chiusa = 1;
+    printf("Mappaa chiusaa con successo!\n");
+
+}
+
+// Funzione imposta_gioco
+
+void imposta_gioco() {
+    printf("\n=== Impostazione Gioco ===\n");
+
+    // Dallocazione se il gioco era gia impostato
+    if (gioco_impostato) {
+        printf("Reimpostzione del gioco in corso...\n");
+        dealloca_gioctori();
+        dealloca_mondoreale();
+        dealloca_soprasotto();
+        mappa_chiusa = 0;
+        gioco_impostato = 0;
+    }
+
+    // Numero giocatori
+    printf("Quanti giocatori siete? (1-4): ");
+    if (scanf("%d", &n_giocatori) != 1 || n_giocatori < 1 || n_giocatori > 4) {
+        printf("Numero di giocaatori non valido!\n", AC_RED, AC_NORMAL);
+        while (getchar() != '\n');
+        n_giocatori = 0;
+        return;
+    }
+    while (getchar() != '\n');
+
+    // Variabile check UndiciVirgolaCinque
+    int undici_virgola_cinque_scelto = 0;
+
+    // Creazionee gioctori
+    for (int i = 0; i < n_giocatori; i++){
+        giocatori[i] = (Giocatore*)malloc(sizeof(Giocatore));
+        if (giocatori[i] == NULL) {
+            printf("Errore allocaazione memoria!\n", AC_RED, AC_NORMAL);
+            return;
+        }
+
+        printf("\n--- Giocatore %d ---\n", i + 1);
+        printf("Inserisci il tuo nome: ");
+        fgets(giocatori[i] -> nome_giocatore, 50, stdin);
+        giocatori[i] -> nome_giocatore [strcspn(giocatori[i] -> nome_giocatore, "\n")] = 0;
+        
+        // Lancio dei dadi per le abilita
+        giocatori[i] -> attaco_psichico = lancia_dado(20);
+        giocatori[i] -> difesa_psichica = lancia_dado(20);
+        giocatori[i] -> fortuna = lancia_dado(20);
+    
+        printf("Abilit Iniziali: \n");
+        printf("  Attacco Psichico: %d\n", giocatori[i] -> attaco_psichico);
+        printf("  Difesa Psichica: %d\n", giocatori[i] -> difesa_psichica);
+        printf("  Fortuna: %d\n", giocatori[i] -> fortuna);
+    
+        // Possibilita di modifica stat
+        printf("\nVuoi modificare le tue abilita?\n");
+        printf
+    }
+    
 
 }

@@ -542,8 +542,100 @@ void imposta_gioco() {
     
         // Possibilita di modifica stat
         printf("\nVuoi modificare le tue abilita?\n");
-        printf
+        printf("1) Aumenta Attacco (+3) e diminuisci Difesa (-3)\n");
+        printf("1) Aumenta Difesa (+3) e diminuisci Attacco (-3)\n");
+
+        if (!undici_virgola_cinque_scelto) {
+            printf("3) Diventa UndiciVirgolaCinque! (+4 Attacco, +4 Difesa, -7 Fortuna)\n");
+        }
+
+        printf("0) Nessuna modifica\n");
+        printf("Scelta: ");
+
+        int scelta;
+        if (scanf("%d", &scelta) != 1) {
+            printf("Input non valido, nssuna modific applicat.\n");
+            while (getchar() != '\n');
+            scelta = 0;
+        } 
+
+        while (getchar() != '\n');
+
+        if (scelta == 1) {
+            giocatori[i] -> attaco_psichico += 3;
+            giocatori[i] -> difesa_psichica -=3;
+            printf("Modifiche applicate!\n");
+        } else if (scelta == 2) {
+            giocatori[i] -> attaco_psichico -= 3;
+            giocatori[i] -> difesa_psichica +=3;
+            printf("Modifiche applicate!\n");
+        } else if (scelta == 3 && !undici_virgola_cinque_scelto) {
+            giocatori[i] -> attaco_psichico += 4;
+            giocatori[i] -> difesa_psichica +=4;
+            giocatori[i] -> fortuna -= 7;
+            strcpy(giocatori[i] -> nome_giocatore, "UndiciVirgolaCinque");
+            undici_virgola_cinque_scelto = 1;
+            printf("Sei divntato UndiciVirgolaaCinque!\n");
+        }
+
+        // Inizializzazione zaino vuoto
+        for (int j = 0; j <3; j++) {
+            giocatori[i] -> zaino[j] = nessun_oggetto;
+        }
+
+        // Inizializzazione posizoni
+        giocatori[i] -> mondo = 0; // Per iniziare nel Mondo Reale
+        giocatori[i] -> pos_mondoreale = NULL; // Impostato a inizio prtita
+        giocatori[i] -> pos_soprasotto = NULL;
     }
-    
+
+    // Menu creaazione mappa
+    printf("\n=== Creazione Mappa ===\n");
+    int scelta_mappa;
+
+    do {
+        printf("\n1) Genera mappa automatica (15 zone)\n");
+        printf("2) Inserisci zona manualmetne\n");
+        printf("3) Cancella zona\n");
+        printf("4) Stampa mappa\n");
+        printf("5) Stampa zona specifica\n");
+        printf("6) Chiudi mappa e termina impostazione\n");
+        printf("Sclta: ");
+
+        if (scanf("%d", &scelta_mappa) != 1) {
+            printf("Input non valido!\n", AC_RED, AC_NORMAL);
+            while (getchar() != '\n');
+            continue;
+        }
+
+        switch (scelta_mappa) {
+            case 1:
+                genera_mappa();
+                break;
+            case 2:
+                inserisci_zona();
+                break;
+            case 3:
+                cancella_zona();
+                break;
+            case 4:
+                stampa_mappa();
+                break;
+            case 5:
+                stampa_zona_specifica();
+                break;
+            case 6:
+                chiudi_mappa();
+                if (mappa_chiusa) {
+                    gioco_impostato = 1;
+                    printf("\nGioco impostato con successo!\n");
+                }
+                break;
+            default:
+                printf("Scelta non valida!\n");
+        }
+    } while (scelta_mappa != 6 || !mappa_chiusa);
 
 }
+
+// Funzioni di gioco

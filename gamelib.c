@@ -684,4 +684,129 @@ static void stampa_zona_corrente(int indice) {
 }
 
 
-static int combatti_nemico
+static int combatti_nemico(int indice, Tipo_nemico nemico) {
+    if (nemico == nessun_nemico) {
+        return 1;  // Nessun combattimento
+    }
+    
+    Giocatore *g = giocatori[indice];
+    printf("\n!!! COMBATTIMENTO contro %s !!!\n", nome_tipo_nemico(nemico));
+    
+    // Statistiche del nemico (da personalizzare)
+    int vita_nemico, attacco_nemico, difesa_nemico;
+    
+    switch (nemico) {
+        case billi:
+            vita_nemico = 20;
+            attacco_nemico = 8;
+            difesa_nemico = 5;
+            break;
+        case democane:
+            vita_nemico = 30;
+            attacco_nemico = 12;
+            difesa_nemico = 8;
+            break;
+        case demotorzone:
+            vita_nemico = 50;
+            attacco_nemico = 18;
+            difesa_nemico = 12;
+            break;
+        default:
+            return 1;
+    }
+    
+    int vita_giocatore = 50;  // Vita base del giocatore
+    
+    printf("Il combattimento inizia!\n");
+    printf("Vita giocatore: %d | Vita nemico: %d\n", vita_giocatore, vita_nemico);
+    
+    // Combattimento a turni
+    while (vita_giocatore > 0 && vita_nemico > 0) {
+        printf("\n1) Attacca\n");
+        printf("2) Difendi\n");
+        printf("3) Usa oggetto\n");
+        printf("Scelta: ");
+        
+        int scelta;
+        if (scanf("%d", &scelta) != 1) {
+            printf("Input non valido!\n");
+            while (getchar() != '\n');
+            continue;
+        }
+        
+        if (scelta == 1) {
+            // Attacco del giocatore
+            int dado_attacco = lancia_dado(20);
+            int danno = g->attacco_pischico + dado_attacco - difesa_nemico;
+            if (danno < 0) danno = 0;
+            
+            vita_nemico -= danno;
+            printf("Hai inflitto %d danni! (Dado: %d)\n", danno, dado_attacco);
+            
+            if (vita_nemico <= 0) {
+                printf("\n*** HAI VINTO! ***\n");
+                
+                // 50% di probabilità che il nemico scompaia
+                if (rand() % 2 == 0) {
+                    printf("Il nemico è scomparso dalla zona!\n");
+                    if (g->mondo == 0 && g->pos_mondoreale != NULL) {
+                        g->pos_mondoreale->nemico = nessun_nemico;
+                    } else if (g->mondo == 1 && g->pos_soprasotto != NULL) {
+                        g->pos_soprasotto->nemico = nessun_nemico;
+                    }
+                }
+                
+                // Controlla se era il Demotorzone
+                if (nemico == demotorzone) {
+                    printf("\n*** HAI SCONFITTO IL DEMOTORZONE! ***\n");
+                    printf("*** %s VINCE LA PARTITA! ***\n", g->nome);
+                    
+                    // Salva il vincitore
+                    if (n_vincitori < 3) {
+                        strcpy(vincitori_precedenti[n_vincitori], g->nome);
+                        n_vincitori++;
+                    } else {
+                        // Sposta i vincitori precedenti
+                        strcpy(vincitori_precedenti[0], vincitori_precedenti[1]);
+                        strcpy(vincitori_precedenti[1], vincitori_precedenti[2]);
+                        strcpy(vincitori_precedenti[2], g->nome);
+                    }
+                    
+                    return 2;  // Vittoria!
+                }
+                
+                return 1;  // Combattimento vinto
+            }
+            
+        } else if (scelta == 2) {
+            printf("Ti difendi!\n");
+        } else if (scelta == 3) {
+            printf("Funzione usa oggetto non implementata in questo combattimento.\n");
+        }
+        
+        // Turno del nemico
+        if (vita_nemico > 0) {
+            int dado_nemico = lancia_dado(20);
+            int danno_nemico = attacco_nemico + dado_nemico - g->difesa_pischica;
+            if (danno_nemico < 0) danno_nemico = 0;
+            
+            if (scelta == 2) {
+                danno_nemico /= 2;  // Dimezza il danno se ti difendi
+            }
+            
+            vita_giocatore -= danno_nemico;
+            printf("Il nemico ti infligge %d danni! (Dado: %d)\n", danno_nemico, dado_nemico);
+            printf("Vita giocatore: %d | Vita nemico: %d\n", vita_giocatore, vita_nemico);
+            
+            if (vita_giocatore <= 0) {
+                printf("\n*** SEI MORTO! ***\n");
+                free(giocatori[indice]);
+                giocatori[indice] = NULL;
+                return 0;  // Giocatore morto
+            }
+        }
+    }
+    
+    return 1;
+}
+

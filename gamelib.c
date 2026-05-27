@@ -202,7 +202,7 @@ static void genera_mappa() {
             free(nuova_mr);
             return;
         }
-        nuova_ss = nuova_mr -> tipo; // Per esseere la stessa zona del Mondo Rale
+        nuova_ss -> tipo = nuova_mr -> tipo; // Per esseere la stessa zona del Mondo Rale
         nuova_ss -> nemico = genera_nemico_soprasotto (i == posizione_demotorzone);
         nuova_ss -> avanti = NULL;
         nuova_ss -> indietro = NULL;
@@ -307,7 +307,7 @@ static void inserisci_zona() {
     nuova_mr -> avanti = NULL;
     nuova_mr -> indietro = NULL;
 
-    nuova_ss = (Tipo_zona)tipo;
+    nuova_ss -> tipo = (Tipo_zona)tipo;
     nuova_ss -> nemico = (Tipo_nemico)nemico_ss;
     nuova_ss -> avanti = NULL;
     nuova_ss -> indietro = NULL;

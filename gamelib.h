@@ -45,7 +45,7 @@ struct Zona_soprasotto;
         Tipo_oggetto oggetto;
         struct Zona_mondoreale *avanti;
         struct Zona_mondoreale *indietro;
-        struct Zona_mondoreale *link_soprasotto;
+        struct Zona_soprasotto *link_soprasotto;
     } Zona_mondoreale;
 
     typedef struct Zona_soprasotto {
@@ -55,7 +55,7 @@ struct Zona_soprasotto;
         Tipo_oggetto oggetto;
         struct Zona_soprasotto *avanti;
         struct Zona_soprasotto *indietro;
-        struct Zona_soprasotto *link_mondoreale;
+        struct Zona_mondoreale *link_mondoreale;
     } Zona_soprasotto;
 
 

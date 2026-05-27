@@ -957,6 +957,55 @@ static int indietreggia_giocatore(int indice) {
     return 1;
 }
 
+
+
+// Passaggio tra mondi
+static int cambia_mondo_giocatore(int indice, int avanza_gia_chiamata) {
+    if (giocatori[indice] == NULL) return 0;
+    
+    Giocatore *g = giocatori[indice];
+    
+    if (avanza_gia_chiamata) {
+        printf("Non puoi cambiare mondo se hai già avanzato in questo turno!\n");
+        return 1;
+    }
+    
+    // Se sei nel Mondo Reale
+    if (g->mondo == 0) {
+        // Devi aver sconfitto il nemico
+        if (g->pos_mondoreale != NULL && g->pos_mondoreale->nemico != nessun_nemico) {
+            printf("Devi prima sconfiggere il nemico!\n");
+            return 1;
+        }
+        
+        // Cambia nel Soprasotto
+        g->mondo = 1;
+        if (g->pos_mondoreale != NULL) {
+            g->pos_soprasotto = g->pos_mondoreale->link_soprasotto;
+        }
+        printf("Sei entrato nel Soprasotto!\n");
+        
+    } else {
+        // Sei nel Soprasotto, prova a tornare nel Mondo Reale
+        int dado_fortuna = lancia_dado(20);
+        printf("Tiri il dado della fortuna... %d\n", dado_fortuna);
+        
+        if (dado_fortuna < g->fortuna) {
+            printf("Ce l'hai fatta! Torni nel Mondo Reale!\n");
+            g->mondo = 0;
+            if (g->pos_soprasotto != NULL) {
+                g->pos_mondoreale = g->pos_soprasotto->link_mondoreale;
+            }
+        } else {
+            printf("Non sei abbastanza fortunato! Rimani nel Soprasotto.\n");
+        }
+    }
+    
+    return 1;
+}
+
+
+
 // Funzioni di fine gioco
 
 void termina_gioco() {

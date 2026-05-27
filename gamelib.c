@@ -639,3 +639,49 @@ void imposta_gioco() {
 }
 
 // Funzioni di gioco
+
+static void stampa_giocatore_corrente(int indice) {
+    if (giocatori[indice] == NULL) {
+        printf("Giocatore morto!\n");
+        return;
+    }
+
+    Giocatore *g = giocatori[indice];
+    printf("\n=== %s ===\n", g -> nome_giocatore);
+    printf("Mondo: %s\n", g -> mondo == 0 ? "Mondo Reale" : "Sopraasotto");
+    printf("Attacco Psichico: %d\n", g -> attaco_psichico);
+    printf("Difesa Psichica: %d\n", g -> difesa_psichica);
+    printf("Fortuna: %d\n", g -> fortuna);
+    printf("Zaino:");
+    int vuoto = 1;
+    for (int i = 0; i < 3; i++) {
+        if (g -> zaino[i] != nessun_oggetto) {
+            printf("%s", nomee_tipo_oggetto(g -> zaino[i]));
+            vuoto = 0;
+        }
+    }
+
+    if (vuoto) printf("(vuoto)");
+    printf("\n");
+}
+
+
+static void stampa_zona_corrente(int indice) {
+    if (giocatori[indice] == NULL) return;
+
+    Giocatore *g = giocatori[indice];
+
+    printf("\n=== Zona Attuale ===\n");
+    if (g -> mondo == 0 && g -> pos_mondoreale != NULL) {
+    printf("Tipo: %s\n", nome_tipo_zona(g -> pos_mondoreale -> tipo));
+    printf("Nemico: %s\n", nome_tipo_nemico(g -> pos_mondoreale -> nemico));
+    printf("Oggetto: %s\n", nome_tipo_oggetto(g -> pos_mondoreale -> oggetto));
+    } else if (g -> mondo == 1 && g -> pos_soprasotto != NULL) {
+    printf("Tipo: %s\n", nome_tipo_zona(g -> pos_soprasotto -> tipo));
+    printf("Nemico: %s\n", nome_tipo_nemico(g -> pos_soprasotto-> nemico));
+    }
+
+}
+
+
+static int combatti_nemico

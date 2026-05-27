@@ -1105,6 +1105,179 @@ static void utilizza_oggetto_giocatore(int indice) {
     
     // Rimuovi l'oggetto dallo zaino
     g->zaino[scelta - 1] = nessun_oggetto;
+    
+}
+
+
+// Funzione gioca
+void gioca() {
+    if (!gioco_impostato || !mappa_chiusa) {
+        printf("Errore! Devi prima impostare il gioco correttamente!\n");
+        return;
+    }
+    
+    printf("\n=== INIZIO PARTITA ===\n");
+    
+    // Posiziona tutti i giocatori nella prima zona del Mondo Reale
+    for (int i = 0; i < n_giocatori; i++) {
+        if (giocatori[i] != NULL) {
+            giocatori[i]->mondo = 0;
+            giocatori[i]->pos_mondoreale = prima_zona_mondoreale;
+            giocatori[i]->pos_soprasotto = NULL;
+        }
+    }
+    
+    // Array per l'ordine di gioco
+    int ordine[4];
+    int giocatori_vivi = n_giocatori;
+    
+    // Loop di gioco
+    while (giocatori_vivi > 0) {
+        // Genera ordine casuale
+        int temp_ordine[4];
+        int count = 0;
+        
+        for (int i = 0; i < n_giocatori; i++) {
+            if (giocatori[i] != NULL) {
+                temp_ordine[count++] = i;
+            }
+        }
+        
+        // Mescola l'ordine (Fisher-Yates shuffle)
+        for (int i = count - 1; i > 0; i--) {
+            int j = rand() % (i + 1);
+            int temp = temp_ordine[i];
+            temp_ordine[i] = temp_ordine[j];
+            temp_ordine[j] = temp;
+        }
+        
+        // Copia nell'ordine finale
+        for (int i = 0; i < count; i++) {
+            ordine[i] = temp_ordine[i];
+        }
+        
+        // Turni dei giocatori
+        for (int i = 0; i < count; i++) {
+            int indice = ordine[i];
+            
+            if (giocatori[indice] == NULL) continue;
+            
+            printf("\n========================================\n");
+            printf("TURNO DI: %s\n", giocatori[indice]->nome);
+            printf("========================================\n");
+            
+            stampa_giocatore_corrente(indice);
+            stampa_zona_corrente(indice);
+            
+            int avanza_chiamata = 0;
+            int turno_finito = 0;
+            
+            while (!turno_finito) {
+                printf("\n1) Avanza\n");
+                printf("2) Indietreggia\n");
+                printf("3) Cambia mondo\n");
+                printf("4) Raccogli oggetto\n");
+                printf("5) Usa oggetto\n");
+                printf("6) Stampa giocatore\n");
+                printf("7) Stampa zona\n");
+                printf("8) Passa il turno\n");
+                printf("Scelta: ");
+                
+                int scelta;
+                if (scanf("%d", &scelta) != 1) {
+                    printf("Input non valido!\n");
+                    while (getchar() != '\n');
+                    continue;
+                }
+                
+                int risultato;
+                
+                switch (scelta) {
+                    case 1:
+                        if (avanza_chiamata) {
+                            printf("Hai già avanzato in questo turno!\n");
+                        } else {
+                            risultato = avanza_giocatore(indice);
+                            if (risultato == 2) {
+                                printf("\n*** PARTITA TERMINATA! ***\n");
+                                return;  // Vittoria!
+                            }
+                            if (risultato == 0) {
+                                giocatori_vivi--;
+                                turno_finito = 1;
+                            } else {
+                                avanza_chiamata = 1;
+                            }
+                        }
+                        break;
+                        
+                    case 2:
+                        if (avanza_chiamata) {
+                            printf("Hai già mosso in questo turno!\n");
+                        } else {
+                            risultato = indietreggia_giocatore(indice);
+                            if (risultato == 2) {
+                                printf("\n*** PARTITA TERMINATA! ***\n");
+                                return;
+                            }
+                            if (risultato == 0) {
+                                giocatori_vivi--;
+                                turno_finito = 1;
+                            } else {
+                                avanza_chiamata = 1;
+                            }
+                        }
+                        break;
+                        
+                    case 3:
+                        risultato = cambia_mondo_giocatore(indice, avanza_chiamata);
+                        if (risultato == 0) {
+                            giocatori_vivi--;
+                            turno_finito = 1;
+                        }
+                        break;
+                        
+                    case 4:
+                        raccogli_oggetto_giocatore(indice);
+                        break;
+                        
+                    case 5:
+                        utilizza_oggetto_giocatore(indice);
+                        break;
+                        
+                    case 6:
+                        stampa_giocatore_corrente(indice);
+                        break;
+                        
+                    case 7:
+                        stampa_zona_corrente(indice);
+                        break;
+                        
+                    case 8:
+                        printf("Passi il turno.\n");
+                        turno_finito = 1;
+                        break;
+                        
+                    default:
+                        printf("Scelta non valida!\n");
+                }
+            }
+        }
+        
+        // Controlla se tutti i giocatori sono morti
+        giocatori_vivi = 0;
+        for (int i = 0; i < n_giocatori; i++) {
+            if (giocatori[i] != NULL) {
+                giocatori_vivi++;
+            }
+        }
+        
+        if (giocatori_vivi == 0) {
+            printf("\n*** TUTTI I GIOCATORI SONO MORTI! GAME OVER! ***\n");
+            return;
+        }
+    }
+    
 }
 
 

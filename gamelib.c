@@ -10,6 +10,7 @@ static const char* nome_tipo_zona(Tipo_zona tipo);
 static const char* nome_tipo_nemico(Tipo_nemico nemico);
 static const char* nome_tipo_oggetto(Tipo_oggetto oggetto);
 static int lancia_dado(int facce);
+static int conta_zone_mondoreale();
 
 
 // Vaariabili globali
@@ -201,7 +202,7 @@ static void genera_mappa() {
             free(nuova_mr);
             return;
         }
-        nuova_ss -> tipo = nuova_mr; // Per esseere la stessa zona del Mondo Rale
+        nuova_ss = nuova_mr -> tipo; // Per esseere la stessa zona del Mondo Rale
         nuova_ss -> nemico = genera_nemico_soprasotto (i == posizione_demotorzone);
         nuova_ss -> avanti = NULL;
         nuova_ss -> indietro = NULL;
@@ -306,7 +307,7 @@ static void inserisci_zona() {
     nuova_mr -> avanti = NULL;
     nuova_mr -> indietro = NULL;
 
-    nuova_ss -> tipo = (Tipo_zona)tipo;
+    nuova_ss = (Tipo_zona)tipo;
     nuova_ss -> nemico = (Tipo_nemico)nemico_ss;
     nuova_ss -> avanti = NULL;
     nuova_ss -> indietro = NULL;
@@ -496,7 +497,7 @@ static void stampa_zona_specifica() {
     }
 
     printf("\nQUale zona vuoi visualizzare? (1-%d): ", n_zone);
-    if (scanf("%d", posizione) != 1 || posizione < 1 || posizione > n_zone) {
+    if (scanf("%d", &posizione) != 1 || posizione < 1 || posizione > n_zone) {
         printf("Posizione non vlida!\n");
         while (getchar() != '\n');
         return;
@@ -521,7 +522,7 @@ static void stampa_zona_specifica() {
     printf("  Oggetto: %s\n", nome_tipo_oggetto(temp_mr -> oggetto));
 
     printf("\n=== Zona %d - Soprasotto ===\n", posizione);
-    printf("  Tipo: %s\n", nome_tipo(temp_ss -> tipo));
+    printf("  Tipo: %s\n", nome_tipo_zona(temp_ss -> nemico));
     printf("  Nemico: %s\n", nome_tipo_nemico(temp_ss -> nemico));
 }
 

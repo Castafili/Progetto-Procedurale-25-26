@@ -5,6 +5,13 @@
 #include "gamelib.h"
 
 
+// Prototipi funzioni statiche
+static const char* nome_tipo_zona(Tipo_zona tipo);
+static const char* nome_tipo_nemico(Tipo_nemico nemico);
+static const char* nome_tipo_oggetto(Tipo_oggetto oggetto);
+static int lancia_dado(int facce);
+
+
 // Vaariabili globali
 
 static Giocatore *giocatori[4] = {NULL, NULL, NULL, NULL};

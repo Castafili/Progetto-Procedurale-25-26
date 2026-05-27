@@ -13,7 +13,7 @@ static int lancia_dado(int facce);
 static int conta_zone_mondoreale();
 
 
-// Vaariabili globali
+// Variabili globali
 
 static Giocatore *giocatori[4] = {NULL, NULL, NULL, NULL};
 static int n_giocatori = 0;
@@ -866,6 +866,96 @@ static int combatti_nemico(int indice, Tipo_nemico nemico) {
 }
 
 
+
+// Movimento
+
+static int avanza_giocatore(int indice) {
+    if (giocatori[indice] == NULL) return 0;
+    
+    Giocatore *g = giocatori[indice];
+    
+    // Combatti il nemico nella zona corrente se presente
+    Tipo_nemico nemico_corrente = nessun_nemico;
+    
+    if (g->mondo == 0 && g->pos_mondoreale != NULL) {
+        nemico_corrente = g->pos_mondoreale->nemico;
+    } else if (g->mondo == 1 && g->pos_soprasotto != NULL) {
+        nemico_corrente = g->pos_soprasotto->nemico;
+    }
+    
+    int risultato_combattimento = combatti_nemico(indice, nemico_corrente);
+    
+    if (risultato_combattimento == 0) {
+        return 0;  // Giocatore morto
+    }
+    
+    if (risultato_combattimento == 2) {
+        return 2;  // Vittoria!
+    }
+    
+    // Avanza alla zona successiva
+    if (g->mondo == 0) {
+        if (g->pos_mondoreale != NULL && g->pos_mondoreale->avanti != NULL) {
+            g->pos_mondoreale = g->pos_mondoreale->avanti;
+            printf("Sei avanzato alla zona successiva!\n");
+        } else {
+            printf("Non puoi avanzare oltre!\n");
+        }
+    } else {
+        if (g->pos_soprasotto != NULL && g->pos_soprasotto->avanti != NULL) {
+            g->pos_soprasotto = g->pos_soprasotto->avanti;
+            printf("Sei avanzato alla zona successiva!\n");
+        } else {
+            printf("Non puoi avanzare oltre!\n");
+        }
+    }
+    
+    return 1;
+}
+
+static int indietreggia_giocatore(int indice) {
+    if (giocatori[indice] == NULL) return 0;
+    
+    Giocatore *g = giocatori[indice];
+    
+    // Combatti il nemico nella zona corrente se presente
+    Tipo_nemico nemico_corrente = nessun_nemico;
+    
+    if (g->mondo == 0 && g->pos_mondoreale != NULL) {
+        nemico_corrente = g->pos_mondoreale->nemico;
+    } else if (g->mondo == 1 && g->pos_soprasotto != NULL) {
+        nemico_corrente = g->pos_soprasotto->nemico;
+    }
+    
+    int risultato_combattimento = combatti_nemico(indice, nemico_corrente);
+    
+    if (risultato_combattimento == 0) {
+        return 0;  // Giocatore morto
+    }
+    
+    if (risultato_combattimento == 2) {
+        return 2;  // Vittoria!
+    }
+    
+    // Indietreggia alla zona precedente
+    if (g->mondo == 0) {
+        if (g->pos_mondoreale != NULL && g->pos_mondoreale->indietro != NULL) {
+            g->pos_mondoreale = g->pos_mondoreale->indietro;
+            printf("Sei indietreggiato alla zona precedente!\n");
+        } else {
+            printf("Non puoi indietreggiare oltre!\n");
+        }
+    } else {
+        if (g->pos_soprasotto != NULL && g->pos_soprasotto->indietro != NULL) {
+            g->pos_soprasotto = g->pos_soprasotto->indietro;
+            printf("Sei indietreggiato alla zona precedente!\n");
+        } else {
+            printf("Non puoi indietreggiare oltre!\n");
+        }
+    }
+    
+    return 1;
+}
 
 // Funzioni di fine gioco
 

@@ -438,7 +438,7 @@ static void stampa_mappa() {
 
 static void stampa_zona_specifica() {
     int posizione;
-    int n_zone = conta_zone_mondorele();
+    int n_zone = conta_zone_mondoreale();
 
     if (n_zone == 0) {
         printf("Non ci sono zone da stampare");
@@ -476,7 +476,7 @@ static void stampa_zona_specifica() {
 }
 
 static void chiudi_mappa() {
-    int n_zone = conta_zone_mondorale();
+    int n_zone =  conta_zone_mondoreale();
     int n_demotorzone = conta_demotorzone();
 
     if (n_zone <15) {
@@ -660,7 +660,7 @@ static void stampa_giocatore_corrente(int indice) {
     int vuoto = 1;
     for (int i = 0; i < 3; i++) {
         if (g -> zaino[i] != nessun_oggetto) {
-            printf("%s", nomee_tipo_oggetto(g -> zaino[i]));
+            printf("%s",  nome_tipo_oggetto(g -> zaino[i]));
             vuoto = 0;
         }
     }

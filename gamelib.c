@@ -540,7 +540,7 @@ static void chiudi_mappa() {
     }
 
     mappa_chiusa = 1;
-    printf("Mappaa chiusaa con successo!\n");
+    printf("Mappa chiusa con successo!\n");
 
 }
 

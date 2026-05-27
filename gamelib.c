@@ -562,7 +562,7 @@ void imposta_gioco() {
     // Numero giocatori
     printf("Quanti giocatori siete? (1-4): ");
     if (scanf("%d", &n_giocatori) != 1 || n_giocatori < 1 || n_giocatori > 4) {
-        printf("Numero di giocaatori non valido!\n");
+        printf("Numero di giocatori non valido!\n");
         while (getchar() != '\n');
         n_giocatori = 0;
         return;
@@ -655,7 +655,7 @@ void imposta_gioco() {
         printf("4) Stampa mappa\n");
         printf("5) Stampa zona specifica\n");
         printf("6) Chiudi mappa e termina impostazione\n");
-        printf("Sclta: ");
+        printf("Scelta: ");
 
         if (scanf("%d", &scelta_mappa) != 1) {
             printf("Input non valido!\n");
@@ -1085,7 +1085,7 @@ static void utilizza_oggetto_giocatore(int indice) {
             break;
         case maglietta_fuocoinferno:
             printf("Indossi la Maglietta Fuocoinferno! Attacco +5 per questo turno!\n");
-            g->attacco_pischico += 5;
+            g -> attaco_psichico += 5;
             break;
         case bussola:
             printf("Consulti la bussola! Fortuna +3!\n");
@@ -1163,7 +1163,7 @@ void gioca() {
             if (giocatori[indice] == NULL) continue;
             
             printf("\n========================================\n");
-            printf("TURNO DI: %s\n", giocatori[indice]->nome);
+            printf("TURNO DI: %s\n", giocatori[indice] -> nome_giocatore);
             printf("========================================\n");
             
             stampa_giocatore_corrente(indice);

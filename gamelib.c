@@ -43,6 +43,56 @@ static int conta_demotorzone() {
     return count;
 }
 
+// Check zone nel Mondo Reale
+static int conta_zone_mondoreale() {
+    int count = 0;
+    Zona_mondoreale *temp = prima_zona_mondoreale;
+    while (temp != NULL) {
+        count++;
+        temp = temp->avanti;
+    }
+    return count;
+}
+
+// Ottiene il nome dell'enum Tipo_zona
+static const char* nome_tipo_zona(Tipo_zona tipo) {
+    switch (tipo) {
+        case bosco: return "Bosco";
+        case scuola: return "Scuola";
+        case laboratorio: return "Laboratorio";
+        case caverna: return "Caverna";
+        case strada: return "Strada";
+        case giardino: return "Giardino";
+        case supermercato: return "Supermercato";
+        case centrale_elettrica: return "Centrale Elettrica";
+        case deposito_abbandonato: return "Deposito Abbandonato";
+        case stazione_polizia: return "Stazione di Polizia";
+        default: return "Sconosciuto";
+    }
+}
+
+// Ottiene il nome dell'enum Tipo_nemico
+static const char* nome_tipo_nemico(Tipo_nemico nemico) {
+    switch (nemico) {
+        case nessun_nemico: return "Nessuno";
+        case billi: return "Billi";
+        case democane: return "Democane";
+        case demotorzone: return "Demotorzone";
+        default: return "Sconosciuto";
+    }
+}
+
+// Ottiene il nome dell'enum Tipo_oggetto
+static const char* nome_tipo_oggetto(Tipo_oggetto oggetto) {
+    switch (oggetto) {
+        case nessun_oggetto: return "Nessuno";
+        case bicicletta: return "Bicicletta";
+        case maglietta_fuocoinferno: return "Maglietta Fuocoinferno";
+        case bussola: return "Bussola";
+        case schitarrata_metallica: return "Schitarrata Metallica";
+        default: return "Sconosciuto";
+    }
+}
 
 
 // Deallaaocazione mappa Mondo Reaale

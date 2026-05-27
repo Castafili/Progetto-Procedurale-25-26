@@ -866,7 +866,6 @@ static int combatti_nemico(int indice, Tipo_nemico nemico) {
 }
 
 
-
 // Movimento
 
 static int avanza_giocatore(int indice) {
@@ -1004,6 +1003,109 @@ static int cambia_mondo_giocatore(int indice, int avanza_gia_chiamata) {
     return 1;
 }
 
+
+// Funzioni zaino
+static void raccogli_oggetto_giocatore(int indice) {
+    if (giocatori[indice] == NULL) return;
+    
+    Giocatore *g = giocatori[indice];
+    
+    // Solo nel Mondo Reale ci sono oggetti
+    if (g->mondo != 0 || g->pos_mondoreale == NULL) {
+        printf("Non ci sono oggetti in questa zona!\n");
+        return;
+    }
+    
+    // Controlla se c'è un nemico
+    if (g->pos_mondoreale->nemico != nessun_nemico) {
+        printf("Devi prima sconfiggere il nemico!\n");
+        return;
+    }
+    
+    // Controlla se c'è un oggetto
+    if (g->pos_mondoreale->oggetto == nessun_oggetto) {
+        printf("Non c'è nessun oggetto in questa zona!\n");
+        return;
+    }
+    
+    // Cerca spazio nello zaino
+    for (int i = 0; i < 3; i++) {
+        if (g->zaino[i] == nessun_oggetto) {
+            g->zaino[i] = g->pos_mondoreale->oggetto;
+            printf("Hai raccolto: %s\n", nome_tipo_oggetto(g->pos_mondoreale->oggetto));
+            g->pos_mondoreale->oggetto = nessun_oggetto;
+            return;
+        }
+    }
+    
+    printf("Lo zaino è pieno!\n");
+}
+
+
+// Uso oggetto
+static void utilizza_oggetto_giocatore(int indice) {
+    if (giocatori[indice] == NULL) return;
+    
+    Giocatore *g = giocatori[indice];
+    
+    printf("\nZaino:\n");
+    int ha_oggetti = 0;
+    for (int i = 0; i < 3; i++) {
+        if (g->zaino[i] != nessun_oggetto) {
+            printf("%d) %s\n", i + 1, nome_tipo_oggetto(g->zaino[i]));
+            ha_oggetti = 1;
+        }
+    }
+    
+    if (!ha_oggetti) {
+        printf("Lo zaino è vuoto!\n");
+        return;
+    }
+    
+    printf("Quale oggetto vuoi usare? (1-3, 0 per annullare): ");
+    int scelta;
+    if (scanf("%d", &scelta) != 1 || scelta < 0 || scelta > 3) {
+        printf("Scelta non valida!\n");
+        while (getchar() != '\n');
+        return;
+    }
+    
+    if (scelta == 0) return;
+    
+    if (g->zaino[scelta - 1] == nessun_oggetto) {
+        printf("Non c'è nessun oggetto in quella posizione!\n");
+        return;
+    }
+    
+    // Effetti degli oggetti (da aaggiungere)
+    switch (g->zaino[scelta - 1]) {
+        case bicicletta:
+            printf("Usi la bicicletta! Puoi avanzare di una zona extra!\n");
+            // Implementa l'effetto
+            break;
+        case maglietta_fuocoinferno:
+            printf("Indossi la Maglietta Fuocoinferno! Attacco +5 per questo turno!\n");
+            g->attacco_pischico += 5;
+            break;
+        case bussola:
+            printf("Consulti la bussola! Fortuna +3!\n");
+            g->fortuna += 3;
+            break;
+        case schitarrata_metallica:
+            printf("Suoni la Schitarrata Metallica! Tutti i nemici nella zona fuggono!\n");
+            if (g->mondo == 0 && g->pos_mondoreale != NULL) {
+                g->pos_mondoreale->nemico = nessun_nemico;
+            } else if (g->mondo == 1 && g->pos_soprasotto != NULL) {
+                g->pos_soprasotto->nemico = nessun_nemico;
+            }
+            break;
+        default:
+            break;
+    }
+    
+    // Rimuovi l'oggetto dallo zaino
+    g->zaino[scelta - 1] = nessun_oggetto;
+}
 
 
 // Funzioni di fine gioco

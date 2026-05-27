@@ -4,11 +4,8 @@
 #include <time.h>
 #include "gamelib.h"
 
-#define AC_RED "\x1b[31m"
-#define AC_YELLOW "\x1b[33m"
-#define AC_NORMAL "\x1b[m"
 
-// Vaariabili globaali
+// Vaariabili globali
 
 static Giocatore *giocatori[4] = {NULL, NULL, NULL, NULL};
 static int n_giocatori = 0;
@@ -130,7 +127,7 @@ static void genera_mappa() {
         // Crea la parte di Mondo Reale
         Zona_mondoreale *nuova_mr = (Zona_mondoreale*)malloc(sizeof(Zona_mondoreale));
         if (nuova_mr == NULL) {
-            printf("Errore alloczione memoria\n", AC_RED, AC_NORMAL);
+            printf("Errore alloczione memoria\n");
             return;
         }
         nuova_mr -> tipo = genera_tipo_zona_randomico();
@@ -143,7 +140,7 @@ static void genera_mappa() {
         // Crea Soprasotto corrispondente
         Zona_soprasotto *nuova_ss = (Zona_soprasotto*)malloc(sizeof(Zona_soprasotto));
         if (nuova_ss == NULL) {
-            printf("Errore alloczione memoria\n", AC_RED, AC_NORMAL);
+            printf("Errore alloczione memoria\n");
             free(nuova_mr);
             return;
         }
@@ -190,13 +187,13 @@ static void inserisci_zona() {
     int posizione;
     printf("\nIn che posizione vuoi insrire la nuova zona? (1-%d): ", conta_zone_mondoreale() + 1);
     if (scanf("%d", &posizione) !=1) {
-        printf("Input non valido!\n", AC_RED, AC_NORMAL);
+        printf("Input non valido!\n");
         while (getchar() != '\n');
         return;
     }
 
     if (posizione < 1) {
-        printf("Posizione non valida!\n", AC_RED, AC_NORMAL);
+        printf("Posizione non valida!\n");
         return;
     }
 
@@ -209,38 +206,38 @@ static void inserisci_zona() {
     printf("8=Deposito Abbandonato, 9=Stazion Polizia\n");
 
     if (scanf("%d", &tipo) != 1 || tipo < 0 || tipo > 9) {
-        printf("Tipo non valido!\n", AC_RED, AC_NORMAL);
+        printf("Tipo non valido!\n");
         while (getchar() != '\n');
         return;
     } 
 
     printf("Nemico Mondo Reale (0=Neessuno, 1=Billi, 2=Democane): ");
     if (scanf("%d", &nemico_mr) != 1 || nemico_mr < 0 || nemico_mr > 2) {
-        printf("Nemico non valido!\n", AC_RED, AC_NORMAL);
+        printf("Nemico non valido!\n");
             while (getchar() != '\n');
             return;
     }
 
     printf("Nemico Soprasotto (0=Nessuno, 2=Democane, 3=Demotorzone): ");
     if (scanf("%d", &nemico_ss) != 1 || nemico_ss < 0 || nemico_ss > 3 || nemico_ss == 1) {
-        printf("Nemico non valido!\n", AC_RED, AC_NORMAL);
+        printf("Nemico non valido!\n");
             while (getchar() != '\n');
             return;
     }
 
     printf("Oggetto (0=Nessuno, 1=Bicicletta, 2=Maglietta, 3=Bussola, 4=Schitarrata): ");
     if (scanf("%d", &oggetto) != 1 || oggetto < 0 || oggetto > 4) {
-        printf("Oggetto non valido!\n", AC_RED, AC_NORMAL);
+        printf("Oggetto non valido!\n");
             while (getchar() != '\n');
             return;
     }
 
     // Crea nuove stanze
-    Zona_mondoreale *nuova_mr = (Zona_mondoreale*)maalloc(sizeof(Zona_mondoreale));
-    Zona_soprasotto *nuova_ss = (Zona_soprasotto*)maalloc(sizeof(Zona_soprasotto));
+    Zona_mondoreale *nuova_mr = (Zona_mondoreale*) malloc(sizeof(Zona_mondoreale));
+    Zona_soprasotto *nuova_ss = (Zona_soprasotto*) malloc(sizeof(Zona_soprasotto));
 
     if (nuova_mr == NULL || nuova_ss == NULL) {
-        printf("Errore allocazione memoria!\n", AC_RED, AC_NORMAL);
+        printf("Errore allocazione memoria!\n");
         free(nuova_mr);
         free(nuova_ss);
         return;
@@ -274,7 +271,7 @@ static void inserisci_zona() {
         }
 
         if (temp == NULL) {
-            printf("Posizione troppo grande, inserisco alla fine.\n", AC_YELLOW, AC_NORMAL);
+            printf("Posizione troppo grande, inserisco alla fine.\n");
             temp = prima_zona_mondoreale;
             while (temp -> avanti != NULL) {
                 temp = temp -> avanti;
@@ -336,13 +333,13 @@ static void cancella_zona() {
     int n_zone = conta_zone_mondoreale();
 
     if (n_zone == 0) {
-        printf("Non ci sono zone da cancellare!\n", AC_YELLOW, AC_NORMAL);
+        printf("Non ci sono zone da cancellare!\n");
         return;
     }
 
     printf("\nQuale zona vuoi cancellare? (1-%d): ", n_zone);
     if (scanf("%d", &posizione) != 1 || posizione < 1 || posizione > n_zone) {
-        printf("Posizion non valida!\n", AC_RED, AC_NORMAL);
+        printf("Posizion non valida!\n");
         while (getchar() != '\n');
         return;
     }
@@ -354,7 +351,7 @@ static void cancella_zona() {
     }
 
     if (temp_mr == NULL) {
-        printf("Zona non trovta!", AC_RED, AC_NORMAL);
+        printf("Zona non trovta!");
         return;
     }
 
@@ -400,7 +397,7 @@ static void stampa_mappa() {
     printf("Scelta: ");
 
     if (scanf("%d", &scelta) != 1 || (scelta != 1 && scelta != 2)) {
-        printf("Scelta non valida!\n", AC_RED, AC_NORMAL);
+        printf("Scelta non valida!\n");
         while (getchar() != '\n');
         return;
     }
@@ -437,13 +434,13 @@ static void stampa_zona_specifica() {
     int n_zone = conta_zone_mondorele();
 
     if (n_zone == 0) {
-        printf("Non ci sono zone da stampare", AC_RED, AC_YELLOW);
+        printf("Non ci sono zone da stampare");
         return;
     }
 
     printf("\nQUale zona vuoi visualizzare? (1-%d): ", n_zone);
     if (scanf("%d", posizione) != 1 || posizione < 1 || posizione > n_zone) {
-        printf("Posizione non vlida!\n", AC_RED, AC_NORMAL);
+        printf("Posizione non vlida!\n");
         while (getchar() != '\n');
         return;
     }
@@ -455,7 +452,7 @@ static void stampa_zona_specifica() {
     }
 
     if (temp_mr == NULL) {
-        printf("Zona non trovata!", AC_RED, AC_NORMAL);
+        printf("Zona non trovata!");
         return;
     }
 
@@ -476,12 +473,12 @@ static void chiudi_mappa() {
     int n_demotorzone = conta_demotorzone();
 
     if (n_zone <15) {
-        printf("Errore! ci devono essere almeno 15 zone. Attualmente ce ne sono %d.\n", n_zone, AC_RED, AC_NORMAL);
+        printf("Errore! ci devono essere almeno 15 zone. Attualmente ce ne sono %d.\n", n_zone);
         return;
     }
 
     if (n_demotorzone != 1) {
-        printf("Errore! Dev esserci esattamente 1 Demotorzone. Attalemente ce ne sono %d.\n", n_demotorzone, AC_RED, AC_NORMAL);
+        printf("Errore! Dev esserci esattamente 1 Demotorzone. Attalemente ce ne sono %d.\n", n_demotorzone);
     }
 
     mappa_chiusa = 1;
@@ -507,7 +504,7 @@ void imposta_gioco() {
     // Numero giocatori
     printf("Quanti giocatori siete? (1-4): ");
     if (scanf("%d", &n_giocatori) != 1 || n_giocatori < 1 || n_giocatori > 4) {
-        printf("Numero di giocaatori non valido!\n", AC_RED, AC_NORMAL);
+        printf("Numero di giocaatori non valido!\n");
         while (getchar() != '\n');
         n_giocatori = 0;
         return;
@@ -521,7 +518,7 @@ void imposta_gioco() {
     for (int i = 0; i < n_giocatori; i++){
         giocatori[i] = (Giocatore*)malloc(sizeof(Giocatore));
         if (giocatori[i] == NULL) {
-            printf("Errore allocaazione memoria!\n", AC_RED, AC_NORMAL);
+            printf("Errore allocaazione memoria!\n");
             return;
         }
 
@@ -603,7 +600,7 @@ void imposta_gioco() {
         printf("Sclta: ");
 
         if (scanf("%d", &scelta_mappa) != 1) {
-            printf("Input non valido!\n", AC_RED, AC_NORMAL);
+            printf("Input non valido!\n");
             while (getchar() != '\n');
             continue;
         }

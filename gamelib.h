@@ -28,10 +28,10 @@ struct Zona_soprasotto;
 
     typedef struct Giocatore {
 
-        char nome_giocatore[20];
+        char nome_giocatore[50];
         int mondo; // 0 = reale, 1 = soprasotto
         struct Zona_mondoreale *pos_mondoreale;
-        struct Zona_mondoreale *pos_soprasotto;
+        struct Zona_soprasotto *pos_soprasotto;
         int attaco_psichico;
         int difesa_psichica;
         int fortuna;
@@ -52,7 +52,6 @@ struct Zona_soprasotto;
 
         Tipo_zona tipo;
         Tipo_nemico nemico;
-        Tipo_oggetto oggetto;
         struct Zona_soprasotto *avanti;
         struct Zona_soprasotto *indietro;
         struct Zona_mondoreale *link_mondoreale;

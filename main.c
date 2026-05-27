@@ -31,7 +31,7 @@ int main() {
             
             case 2:
                 //verifica_errori();
-                gioca();
+                //gioca();
                 break;
 
             case 3:

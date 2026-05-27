@@ -243,7 +243,7 @@ static void genera_mappa() {
 
 static void inserisci_zona() {
     int posizione;
-    printf("\nIn che posizione vuoi insrire la nuova zona? (1-%d): ", conta_zone_mondoreale() + 1);
+    printf("\nIn che posizione vuoi inserire la nuova zona? (1-%d): ", conta_zone_mondoreale() + 1);
     if (scanf("%d", &posizione) !=1) {
         printf("Input non valido!\n");
         while (getchar() != '\n');
@@ -261,7 +261,7 @@ static void inserisci_zona() {
     printf("Tipo zona (0-9): ");
     printf("\n0=Bosco, 1=Scuola, 2=Laboratorio, 3=Caverna, 4=Strada,\n"); 
     printf("5=Giardino, 6=Supermercato, 7=Centrale Elettrica,\n"); 
-    printf("8=Deposito Abbandonato, 9=Stazion Polizia\n");
+    printf("8=Deposito Abbandonato, 9=Stazione Polizia\n");
 
     if (scanf("%d", &tipo) != 1 || tipo < 0 || tipo > 9) {
         printf("Tipo non valido!\n");
@@ -269,7 +269,7 @@ static void inserisci_zona() {
         return;
     } 
 
-    printf("Nemico Mondo Reale (0=Neessuno, 1=Billi, 2=Democane): ");
+    printf("Nemico Mondo Reale (0=Nessuno, 1=Billi, 2=Democane): ");
     if (scanf("%d", &nemico_mr) != 1 || nemico_mr < 0 || nemico_mr > 2) {
         printf("Nemico non valido!\n");
             while (getchar() != '\n');
@@ -450,7 +450,7 @@ static void cancella_zona() {
 static void stampa_mappa() {
     int scelta;
     printf("\nQuale mappa vuoi stampare?\n");
-    printf("1) Mondo Real\n");
+    printf("1) Mondo Reale\n");
     printf("2) Soprasotto\n");
     printf("Scelta: ");
 
@@ -590,15 +590,15 @@ void imposta_gioco() {
         giocatori[i] -> difesa_psichica = lancia_dado(20);
         giocatori[i] -> fortuna = lancia_dado(20);
     
-        printf("Abilit Iniziali: \n");
+        printf("Abilita Iniziali: \n");
         printf("  Attacco Psichico: %d\n", giocatori[i] -> attaco_psichico);
         printf("  Difesa Psichica: %d\n", giocatori[i] -> difesa_psichica);
         printf("  Fortuna: %d\n", giocatori[i] -> fortuna);
     
         // Possibilita di modifica stat
         printf("\nVuoi modificare le tue abilita?\n");
-        printf("1) Aumenta Attacco (+3) e diminuisci Difesa (-3)\n");
-        printf("1) Aumenta Difesa (+3) e diminuisci Attacco (-3)\n");
+        printf("1)   Attacco (+3) e diminuisci Difesa (-3)\n");
+        printf("2)   Difesa (+3) e diminuisci Attacco (-3)\n");
 
         if (!undici_virgola_cinque_scelto) {
             printf("3) Diventa UndiciVirgolaCinque! (+4 Attacco, +4 Difesa, -7 Fortuna)\n");
@@ -870,7 +870,7 @@ static int combatti_nemico(int indice, Tipo_nemico nemico) {
 // Funzioni di fine gioco
 
 void termina_gioco() {
-    printf("\n Grazie per avr giocato a Cosestrane!\n");
+    printf("\nGrazie per avr giocato a Cosestrane!\n");
 
     // Deallocazione memoria
     dealloca_gioctori();

@@ -690,7 +690,7 @@ static int combatti_nemico(int indice, Tipo_nemico nemico) {
     }
     
     Giocatore *g = giocatori[indice];
-    printf("\n!!! COMBATTIMENTO contro %s !!!\n", nome_tipo_nemico(nemico));
+    printf("\n=== COMBATTIMENTO contro %s ===\n", nome_tipo_nemico(nemico));
     
     // Statistiche del nemico (da personalizzare)
     int vita_nemico, attacco_nemico, difesa_nemico;
@@ -737,7 +737,7 @@ static int combatti_nemico(int indice, Tipo_nemico nemico) {
         if (scelta == 1) {
             // Attacco del giocatore
             int dado_attacco = lancia_dado(20);
-            int danno = g->attacco_pischico + dado_attacco - difesa_nemico;
+            int danno = g -> attaco_psichico + dado_attacco - difesa_nemico;
             if (danno < 0) danno = 0;
             
             vita_nemico -= danno;
@@ -759,17 +759,17 @@ static int combatti_nemico(int indice, Tipo_nemico nemico) {
                 // Controlla se era il Demotorzone
                 if (nemico == demotorzone) {
                     printf("\n*** HAI SCONFITTO IL DEMOTORZONE! ***\n");
-                    printf("*** %s VINCE LA PARTITA! ***\n", g->nome);
+                    printf("*** %s VINCE LA PARTITA! ***\n", g->nome_giocatore);
                     
                     // Salva il vincitore
                     if (n_vincitori < 3) {
-                        strcpy(vincitori_precedenti[n_vincitori], g->nome);
+                        strcpy(vincitori_precedenti[n_vincitori], g->nome_giocatore);
                         n_vincitori++;
                     } else {
                         // Sposta i vincitori precedenti
                         strcpy(vincitori_precedenti[0], vincitori_precedenti[1]);
                         strcpy(vincitori_precedenti[1], vincitori_precedenti[2]);
-                        strcpy(vincitori_precedenti[2], g->nome);
+                        strcpy(vincitori_precedenti[2], g->nome_giocatore);
                     }
                     
                     return 2;  // Vittoria!
@@ -787,11 +787,11 @@ static int combatti_nemico(int indice, Tipo_nemico nemico) {
         // Turno del nemico
         if (vita_nemico > 0) {
             int dado_nemico = lancia_dado(20);
-            int danno_nemico = attacco_nemico + dado_nemico - g->difesa_pischica;
+            int danno_nemico = attacco_nemico + dado_nemico - g->difesa_psichica;
             if (danno_nemico < 0) danno_nemico = 0;
             
             if (scelta == 2) {
-                danno_nemico /= 2;  // Dimezza il danno se ti difendi
+                danno_nemico /= 2;  // Dimezza il danno con la difesa
             }
             
             vita_giocatore -= danno_nemico;
@@ -806,7 +806,38 @@ static int combatti_nemico(int indice, Tipo_nemico nemico) {
             }
         }
     }
-    
     return 1;
+
 }
 
+
+
+// Funzioni di fine gioco
+
+void termina_gioco() {
+    printf("\n Grazie per avr giocato a Cosestrane!\n");
+
+    // Deallocazione memoria
+    dealloca_gioctori();
+    dealloca_mondoreale();
+    dealloca_soprasotto();
+    gioco_impostato = 0;
+    mappa_chiusa = 0;
+
+}
+
+
+void crediti() {
+    printf("\n=== Crediti ===\n");
+    printf("Gioco creato da: Filippo Castagnola N. Matricola: 376476\n");
+
+    if (n_vincitori > 0) {
+        printf("\n--- Ultimi Vincitiori ---\n");
+        for (int i = 0; i < n_vincitori; i++) {
+            printf("%d. %s\n", i + 1, vincitori_precedenti[i]);
+        }
+    } else {
+        printf("\nAncora nessun vincitore");
+    }
+
+}

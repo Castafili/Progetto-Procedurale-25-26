@@ -711,7 +711,7 @@ static void stampa_giocatore_corrente(int indice) {
     int vuoto = 1;
     for (int i = 0; i < 3; i++) {
         if (g -> zaino[i] != nessun_oggetto) {
-            printf("%s",  nome_tipo_oggetto(g -> zaino[i]));
+            printf("%s ", nome_tipo_oggetto(g -> zaino[i]));
             vuoto = 0;
         }
     }
@@ -1200,6 +1200,11 @@ void gioca() {
                             risultato = avanza_giocatore(indice);
                             if (risultato == 2) {
                                 printf("\n*** PARTITA TERMINATA! ***\n");
+                                dealloca_gioctori();
+                                dealloca_mondoreale();
+                                dealloca_soprasotto();
+                                gioco_impostato = 0;
+                                mappa_chiusa = 0;
                                 return;  // Vittoria!
                             }
                             if (risultato == 0) {
@@ -1218,6 +1223,11 @@ void gioca() {
                             risultato = indietreggia_giocatore(indice);
                             if (risultato == 2) {
                                 printf("\n*** PARTITA TERMINATA! ***\n");
+                                dealloca_gioctori();
+                                dealloca_mondoreale();
+                                dealloca_soprasotto();
+                                gioco_impostato = 0;
+                                mappa_chiusa = 0;
                                 return;
                             }
                             if (risultato == 0) {
@@ -1274,6 +1284,11 @@ void gioca() {
         
         if (giocatori_vivi == 0) {
             printf("\n*** TUTTI I GIOCATORI SONO MORTI! GAME OVER! ***\n");
+            dealloca_gioctori();
+            dealloca_mondoreale();
+            dealloca_soprasotto();
+            gioco_impostato = 0;
+            mappa_chiusa = 0;
             return;
         }
     }

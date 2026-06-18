@@ -402,7 +402,7 @@ static void cancella_zona() {
         return;
     }
 
-    // Trova zona da rimuovere nel Mondo Real
+    // Trova zona da rimuovere nel Mondo Reale
     Zona_mondoreale *temp_mr = prima_zona_mondoreale;
     for (int i = 1; i < posizione && temp_mr != NULL; i++) {
         temp_mr = temp_mr -> avanti;
@@ -609,7 +609,7 @@ void imposta_gioco() {
 
         int scelta;
         if (scanf("%d", &scelta) != 1) {
-            printf("Input non valido, nssuna modific applicat.\n");
+            printf("Input non valido, nessuna modifica applicata.\n");
             while (getchar() != '\n');
             scelta = 0;
         } 

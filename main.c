@@ -30,7 +30,6 @@ int main() {
                 break;
             
             case 2:
-                //verifica_errori();
                 gioca();
                 break;
 

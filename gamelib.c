@@ -402,7 +402,7 @@ static void cancella_zona() {
         return;
     }
 
-    // Trova zona da rimuovere nel Mondo Real
+    // Trova zona da rimuovere nel Mondo Reale
     Zona_mondoreale *temp_mr = prima_zona_mondoreale;
     for (int i = 1; i < posizione && temp_mr != NULL; i++) {
         temp_mr = temp_mr -> avanti;
@@ -609,7 +609,7 @@ void imposta_gioco() {
 
         int scelta;
         if (scanf("%d", &scelta) != 1) {
-            printf("Input non valido, nssuna modific applicat.\n");
+            printf("Input non valido, nessuna modifica applicata.\n");
             while (getchar() != '\n');
             scelta = 0;
         } 
@@ -711,7 +711,7 @@ static void stampa_giocatore_corrente(int indice) {
     int vuoto = 1;
     for (int i = 0; i < 3; i++) {
         if (g -> zaino[i] != nessun_oggetto) {
-            printf("%s",  nome_tipo_oggetto(g -> zaino[i]));
+            printf("%s ", nome_tipo_oggetto(g -> zaino[i]));
             vuoto = 0;
         }
     }
@@ -1200,6 +1200,11 @@ void gioca() {
                             risultato = avanza_giocatore(indice);
                             if (risultato == 2) {
                                 printf("\n*** PARTITA TERMINATA! ***\n");
+                                dealloca_gioctori();
+                                dealloca_mondoreale();
+                                dealloca_soprasotto();
+                                gioco_impostato = 0;
+                                mappa_chiusa = 0;
                                 return;  // Vittoria!
                             }
                             if (risultato == 0) {
@@ -1218,6 +1223,11 @@ void gioca() {
                             risultato = indietreggia_giocatore(indice);
                             if (risultato == 2) {
                                 printf("\n*** PARTITA TERMINATA! ***\n");
+                                dealloca_gioctori();
+                                dealloca_mondoreale();
+                                dealloca_soprasotto();
+                                gioco_impostato = 0;
+                                mappa_chiusa = 0;
                                 return;
                             }
                             if (risultato == 0) {
@@ -1274,6 +1284,11 @@ void gioca() {
         
         if (giocatori_vivi == 0) {
             printf("\n*** TUTTI I GIOCATORI SONO MORTI! GAME OVER! ***\n");
+            dealloca_gioctori();
+            dealloca_mondoreale();
+            dealloca_soprasotto();
+            gioco_impostato = 0;
+            mappa_chiusa = 0;
             return;
         }
     }

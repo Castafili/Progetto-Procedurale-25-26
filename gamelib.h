@@ -5,7 +5,6 @@
     void termina_gioco();
     void crediti();
 
-    void verifica_errori();
 
 // Definizioni Tipi
 

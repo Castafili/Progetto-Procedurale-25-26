@@ -464,27 +464,37 @@ static void stampa_mappa() {
     }
 
     if (scelta == 1) {
-        printf("\n=== Mappa Mondo Reale ===\n");
-        Zona_mondoreale *temp = prima_zona_mondoreale;
-        int i = 1;
-        while (temp != NULL) {
-            printf("\nZona %d:\n", i);
-            printf("  Tipo: %s\n", nome_tipo_zona(temp -> tipo));
-            printf("  Nemico: %s\n", nome_tipo_nemico(temp -> nemico));
-            printf("  Oggetto: %s\n", nome_tipo_oggetto(temp -> oggetto));
-            temp = temp -> avanti;
-            i++;
+        if(mappa_chiusa == 0) {
+            printf("\nErrore! Mappa non ancora creata!\n");
+            return;
+        } else {
+            printf("\n=== Mappa Mondo Reale ===\n");
+            Zona_mondoreale *temp = prima_zona_mondoreale;
+            int i = 1;
+            while (temp != NULL) {
+                printf("\nZona %d:\n", i);
+                printf("  Tipo: %s\n", nome_tipo_zona(temp -> tipo));
+                printf("  Nemico: %s\n", nome_tipo_nemico(temp -> nemico));
+                printf("  Oggetto: %s\n", nome_tipo_oggetto(temp -> oggetto));
+                temp = temp -> avanti;
+                i++;
+            }
         }
     } else {
-        printf("\n=== Mappa Soprasotto ===\n");
-        Zona_soprasotto *temp = prima_zona_soprasotto;
-        int i = 1;
-        while (temp != NULL) {
-            printf("\nZona %d:\n", i);
-            printf("  Tipo: %s\n", nome_tipo_zona(temp -> tipo));
-            printf("  Nemico: %s\n", nome_tipo_nemico(temp -> nemico));
-            temp = temp -> avanti;
-            i++;
+        if(mappa_chiusa == 0) {
+            printf("\nErrore! Mappa non ancora creata!\n");
+            return;
+        } else {
+            printf("\n=== Mappa Soprasotto ===\n");
+            Zona_soprasotto *temp = prima_zona_soprasotto;
+            int i = 1;
+            while (temp != NULL) {
+                printf("\nZona %d:\n", i);
+                printf("  Tipo: %s\n", nome_tipo_zona(temp -> tipo));
+                printf("  Nemico: %s\n", nome_tipo_nemico(temp -> nemico));
+                temp = temp -> avanti;
+                i++;
+            }
         }
     }
 

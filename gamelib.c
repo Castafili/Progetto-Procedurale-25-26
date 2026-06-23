@@ -4,6 +4,9 @@
 #include <time.h>
 #include "gamelib.h"
 
+// ========= FIXES ========
+// Se il giocatore prova ad indietreggiare e non puo perche si trova nella prima zona il gioco lo conta comunque come se il movimento sia stato eseguito
+// Se provo a stampare mappa senza averla creata non da errore
 
 // Prototipi funzioni statiche
 static const char* nome_tipo_zona(Tipo_zona tipo);
@@ -537,6 +540,7 @@ static void chiudi_mappa() {
 
     if (n_demotorzone != 1) {
         printf("Errore! Dev esserci esattamente 1 Demotorzone. Attalemente ce ne sono %d.\n", n_demotorzone);
+        return;
     }
 
     mappa_chiusa = 1;

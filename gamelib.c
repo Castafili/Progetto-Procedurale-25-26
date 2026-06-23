@@ -550,7 +550,7 @@ static void chiudi_mappa() {
 
     mappa_chiusa = 1;
     printf("Mappa chiusa con successo!\n");
-
+    return;
 }
 
 // Funzione imposta_gioco

@@ -4,6 +4,8 @@
 #include <time.h>
 #include "gamelib.h"
 
+// ========= FIXES ========
+// Se il giocatore prova ad indietreggiare e non puo perche si trova nella prima zona il gioco lo conta comunque come se il movimento sia stato eseguito
 
 // Prototipi funzioni statiche
 static const char* nome_tipo_zona(Tipo_zona tipo);
@@ -460,6 +462,11 @@ static void stampa_mappa() {
         return;
     }
 
+    if(mappa_chiusa == 0) {
+        printf("\nErrore! Mappa non ancora creata!\n");
+        return;
+    }
+
     if (scelta == 1) {
         printf("\n=== Mappa Mondo Reale ===\n");
         Zona_mondoreale *temp = prima_zona_mondoreale;
@@ -537,11 +544,12 @@ static void chiudi_mappa() {
 
     if (n_demotorzone != 1) {
         printf("Errore! Dev esserci esattamente 1 Demotorzone. Attalemente ce ne sono %d.\n", n_demotorzone);
+        return;
     }
 
     mappa_chiusa = 1;
     printf("Mappa chiusa con successo!\n");
-
+    return;
 }
 
 // Funzione imposta_gioco

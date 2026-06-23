@@ -6,7 +6,6 @@
 
 // ========= FIXES ========
 // Se il giocatore prova ad indietreggiare e non puo perche si trova nella prima zona il gioco lo conta comunque come se il movimento sia stato eseguito
-// Se provo a stampare mappa senza averla creata non da errore
 
 // Prototipi funzioni statiche
 static const char* nome_tipo_zona(Tipo_zona tipo);

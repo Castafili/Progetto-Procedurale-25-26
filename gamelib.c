@@ -1059,7 +1059,7 @@ static void raccogli_oggetto_giocatore(int indice) {
 
 // Uso oggetto
 static int utilizza_oggetto_giocatore(int indice, int *bonus_attacco_temp) {
-    if (giocatori[indice] == NULL) return;
+    if (giocatori[indice] == NULL) return 0;
     
     Giocatore *g = giocatori[indice];
     
@@ -1074,7 +1074,7 @@ static int utilizza_oggetto_giocatore(int indice, int *bonus_attacco_temp) {
     
     if (!ha_oggetti) {
         printf("Lo zaino è vuoto!\n");
-        return;
+        return 0;
     }
     
     printf("Quale oggetto vuoi usare? (1-3, 0 per annullare): ");
@@ -1085,11 +1085,11 @@ static int utilizza_oggetto_giocatore(int indice, int *bonus_attacco_temp) {
         return;
     }
     
-    if (scelta == 0) return;
+    if (scelta == 0) return 0;
     
     if (g->zaino[scelta - 1] == nessun_oggetto) {
         printf("Non c'è nessun oggetto in quella posizione!\n");
-        return;
+        return 0;
     }
 
     int risultato = 1;
@@ -1127,6 +1127,7 @@ static int utilizza_oggetto_giocatore(int indice, int *bonus_attacco_temp) {
     if (giocatori[indice] != NULL) {
         g->zaino[scelta - 1] = nessun_oggetto;
     }
+    return risultato;
 
 }
 
@@ -1329,7 +1330,7 @@ void gioca() {
 // Funzioni di fine gioco
 
 void termina_gioco() {
-    printf("\nGrazie per avr giocato a Cosestrane!\n");
+    printf("\nGrazie per aver giocato a Cosestrane!\n");
 
     // Deallocazione memoria
     dealloca_gioctori();

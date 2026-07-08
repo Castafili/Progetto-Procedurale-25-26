@@ -1082,7 +1082,7 @@ static int utilizza_oggetto_giocatore(int indice, int *bonus_attacco_temp) {
     if (scanf("%d", &scelta) != 1 || scelta < 0 || scelta > 3) {
         printf("Scelta non valida!\n");
         while (getchar() != '\n');
-        return;
+        return 0;
     }
     
     if (scelta == 0) return 0;
@@ -1301,7 +1301,6 @@ void gioca() {
                 giocatori[indice] -> attaco_psichico -= bonus_attacco_temp;
             }
 
-            }
 
         }
         

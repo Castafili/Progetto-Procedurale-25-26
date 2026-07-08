@@ -974,7 +974,7 @@ static int indietreggia_giocatore(int indice, int *bonus_attacco_temp) {
 
 
 // Passaggio tra mondi
-static int cambia_mondo_giocatore(int indice, int avanza_gia_chiamata) {
+static int cambia_mondo_giocatore(int indice, int avanza_gia_chiamata, int *cambio_mondo_tentato) {
     if (giocatori[indice] == NULL) return 0;
     
     Giocatore *g = giocatori[indice];
@@ -1001,6 +1001,12 @@ static int cambia_mondo_giocatore(int indice, int avanza_gia_chiamata) {
         
     } else {
         // Sei nel Soprasotto, prova a tornare nel Mondo Reale
+
+        if (*cambio_mondo_tentato) {
+            printf("Hai già tentato di tornare nel mondo reale in questo turno!\n");
+            return 1;
+        }
+
         int dado_fortuna = lancia_dado(20);
         printf("Tiri il dado della fortuna... %d\n", dado_fortuna);
         
@@ -1015,6 +1021,7 @@ static int cambia_mondo_giocatore(int indice, int avanza_gia_chiamata) {
         }
     }
     
+    *cambio_mondo_tentato = 1;
     return 1;
 }
 
@@ -1195,6 +1202,7 @@ void gioca() {
             int avanza_chiamata = 0;
             int turno_finito = 0;
             int bonus_attacco_temp = 0;
+            int cambio_mondo_tentato = 0;
             
             while (!turno_finito) {
                 printf("\n1) Avanza\n");
@@ -1264,7 +1272,7 @@ void gioca() {
                         break;
                         
                     case 3:
-                        risultato = cambia_mondo_giocatore(indice, avanza_chiamata);
+                        risultato = cambia_mondo_giocatore(indice, avanza_chiamata, &cambio_mondo_tentato);
                         if (risultato == 0) {
                             giocatori_vivi--;
                             turno_finito = 1;

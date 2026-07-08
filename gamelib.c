@@ -462,7 +462,7 @@ static void stampa_mappa() {
         return;
     }
 
-    if(mappa_chiusa == 0) {
+    if(conta_zone_mondoreale() == 0) {
         printf("\nErrore! Mappa non ancora creata!\n");
         return;
     }

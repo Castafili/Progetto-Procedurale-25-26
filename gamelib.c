@@ -5,7 +5,7 @@
 #include "gamelib.h"
 
 // ========= FIXES ========
-// Se il giocatore prova ad indietreggiare e non puo perche si trova nella prima zona il gioco lo conta comunque come se il movimento sia stato eseguito
+
 
 // Prototipi funzioni statiche
 static const char* nome_tipo_zona(Tipo_zona tipo);
@@ -13,7 +13,7 @@ static const char* nome_tipo_nemico(Tipo_nemico nemico);
 static const char* nome_tipo_oggetto(Tipo_oggetto oggetto);
 static int lancia_dado(int facce);
 static int conta_zone_mondoreale();
-
+static int utilizza_oggetto_giocatore(int indice, int *bonus_attacco_temp);
 
 // Variabili globali
 
@@ -22,7 +22,7 @@ static int n_giocatori = 0;
 static Zona_mondoreale *prima_zona_mondoreale = NULL;
 static Zona_soprasotto *prima_zona_soprasotto = NULL;
 static int mappa_chiusa = 0; // Non chiusa (1 -> chiusa)
-static int gioco_impostato = 0; // Come sopr
+static int gioco_impostato = 0; // Come sopra
 static char vincitori_precedenti[3][50] = {"", "", ""}; 
 static int n_vincitori = 0;
 
@@ -747,7 +747,7 @@ static void stampa_zona_corrente(int indice) {
 }
 
 
-static int combatti_nemico(int indice, Tipo_nemico nemico) {
+static int combatti_nemico(int indice, Tipo_nemico nemico, int *bonus_attacco_temp) {
     if (nemico == nessun_nemico) {
         return 1;  // Nessun combattimento
     }
@@ -844,7 +844,14 @@ static int combatti_nemico(int indice, Tipo_nemico nemico) {
         } else if (scelta == 2) {
             printf("Ti difendi!\n");
         } else if (scelta == 3) {
-            printf("Funzione usa oggetto non implementata in questo combattimento.\n");
+            int esito_oggetto = utilizza_oggetto_giocatore(indice, bonus_attacco_temp);
+            if (esito_oggetto == 0) {
+                return 0;
+            }
+            if (esito_oggetto == 2) {
+                return 2;
+            }
+            scelta = 0;
         }
         
         // Turno del nemico
@@ -876,7 +883,7 @@ static int combatti_nemico(int indice, Tipo_nemico nemico) {
 
 // Movimento
 
-static int avanza_giocatore(int indice) {
+static int avanza_giocatore(int indice, int *bonus_attacco_temp) {
     if (giocatori[indice] == NULL) return 0;
     
     Giocatore *g = giocatori[indice];
@@ -890,7 +897,7 @@ static int avanza_giocatore(int indice) {
         nemico_corrente = g->pos_soprasotto->nemico;
     }
     
-    int risultato_combattimento = combatti_nemico(indice, nemico_corrente);
+    int risultato_combattimento = combatti_nemico(indice, nemico_corrente, bonus_attacco_temp);
     
     if (risultato_combattimento == 0) {
         return 0;  // Giocatore morto
@@ -920,7 +927,7 @@ static int avanza_giocatore(int indice) {
     return 1;
 }
 
-static int indietreggia_giocatore(int indice) {
+static int indietreggia_giocatore(int indice, int *bonus_attacco_temp) {
     if (giocatori[indice] == NULL) return 0;
     
     Giocatore *g = giocatori[indice];
@@ -934,7 +941,7 @@ static int indietreggia_giocatore(int indice) {
         nemico_corrente = g->pos_soprasotto->nemico;
     }
     
-    int risultato_combattimento = combatti_nemico(indice, nemico_corrente);
+    int risultato_combattimento = combatti_nemico(indice, nemico_corrente, bonus_attacco_temp);
     
     if (risultato_combattimento == 0) {
         return 0;  // Giocatore morto
@@ -1051,8 +1058,8 @@ static void raccogli_oggetto_giocatore(int indice) {
 
 
 // Uso oggetto
-static void utilizza_oggetto_giocatore(int indice) {
-    if (giocatori[indice] == NULL) return;
+static int utilizza_oggetto_giocatore(int indice, int *bonus_attacco_temp) {
+    if (giocatori[indice] == NULL) return 0;
     
     Giocatore *g = giocatori[indice];
     
@@ -1067,7 +1074,7 @@ static void utilizza_oggetto_giocatore(int indice) {
     
     if (!ha_oggetti) {
         printf("Lo zaino è vuoto!\n");
-        return;
+        return 0;
     }
     
     printf("Quale oggetto vuoi usare? (1-3, 0 per annullare): ");
@@ -1075,32 +1082,37 @@ static void utilizza_oggetto_giocatore(int indice) {
     if (scanf("%d", &scelta) != 1 || scelta < 0 || scelta > 3) {
         printf("Scelta non valida!\n");
         while (getchar() != '\n');
-        return;
+        return 0;
     }
     
-    if (scelta == 0) return;
+    if (scelta == 0) return 0;
     
     if (g->zaino[scelta - 1] == nessun_oggetto) {
         printf("Non c'è nessun oggetto in quella posizione!\n");
-        return;
+        return 0;
     }
+
+    int risultato = 1;
     
     // Effetti degli oggetti (da aaggiungere)
     switch (g->zaino[scelta - 1]) {
         case bicicletta:
             printf("Usi la bicicletta! Puoi avanzare di una zona extra!\n");
-            // Implementa l'effetto
+            risultato = avanza_giocatore(indice, bonus_attacco_temp);
             break;
         case maglietta_fuocoinferno:
             printf("Indossi la Maglietta Fuocoinferno! Attacco +5 per questo turno!\n");
             g -> attaco_psichico += 5;
+            if (bonus_attacco_temp != NULL) {
+                *bonus_attacco_temp += 5;
+            }
             break;
         case bussola:
             printf("Consulti la bussola! Fortuna +3!\n");
             g->fortuna += 3;
             break;
         case schitarrata_metallica:
-            printf("Suoni la Schitarrata Metallica! Tutti i nemici nella zona fuggono!\n");
+            printf("Suoni la Schitarrata Metallica! Il nemico nella zona fugge!\n");
             if (g->mondo == 0 && g->pos_mondoreale != NULL) {
                 g->pos_mondoreale->nemico = nessun_nemico;
             } else if (g->mondo == 1 && g->pos_soprasotto != NULL) {
@@ -1112,8 +1124,11 @@ static void utilizza_oggetto_giocatore(int indice) {
     }
     
     // Rimuovi l'oggetto dallo zaino
-    g->zaino[scelta - 1] = nessun_oggetto;
-    
+    if (giocatori[indice] != NULL) {
+        g->zaino[scelta - 1] = nessun_oggetto;
+    }
+    return risultato;
+
 }
 
 
@@ -1179,6 +1194,7 @@ void gioca() {
             
             int avanza_chiamata = 0;
             int turno_finito = 0;
+            int bonus_attacco_temp = 0;
             
             while (!turno_finito) {
                 printf("\n1) Avanza\n");
@@ -1205,7 +1221,7 @@ void gioca() {
                         if (avanza_chiamata) {
                             printf("Hai già avanzato in questo turno!\n");
                         } else {
-                            risultato = avanza_giocatore(indice);
+                            risultato = avanza_giocatore(indice, &bonus_attacco_temp);
                             if (risultato == 2) {
                                 printf("\n*** PARTITA TERMINATA! ***\n");
                                 dealloca_gioctori();
@@ -1228,7 +1244,7 @@ void gioca() {
                         if (avanza_chiamata) {
                             printf("Hai già mosso in questo turno!\n");
                         } else {
-                            risultato = indietreggia_giocatore(indice);
+                            risultato = indietreggia_giocatore(indice, &bonus_attacco_temp);
                             if (risultato == 2) {
                                 printf("\n*** PARTITA TERMINATA! ***\n");
                                 dealloca_gioctori();
@@ -1260,7 +1276,7 @@ void gioca() {
                         break;
                         
                     case 5:
-                        utilizza_oggetto_giocatore(indice);
+                        utilizza_oggetto_giocatore(indice, &bonus_attacco_temp);
                         break;
                         
                     case 6:
@@ -1280,6 +1296,12 @@ void gioca() {
                         printf("Scelta non valida!\n");
                 }
             }
+
+            if (bonus_attacco_temp != 0 && giocatori[indice] != NULL) {
+                giocatori[indice] -> attaco_psichico -= bonus_attacco_temp;
+            }
+
+
         }
         
         // Controlla se tutti i giocatori sono morti
@@ -1300,14 +1322,14 @@ void gioca() {
             return;
         }
     }
-    
+
 }
 
 
 // Funzioni di fine gioco
 
 void termina_gioco() {
-    printf("\nGrazie per avr giocato a Cosestrane!\n");
+    printf("\nGrazie per aver giocato a Cosestrane!\n");
 
     // Deallocazione memoria
     dealloca_gioctori();

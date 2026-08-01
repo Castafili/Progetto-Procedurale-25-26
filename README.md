@@ -1,3 +1,11 @@
+![Language](https://img.shields.io/badge/Language-C11-blue?style=flat)
+![Platform](https://img.shields.io/badge/platform-Linux%2FUbuntu-orange?style=flat)
+![Architecture](https://img.shields.io/badge/architecture-modular-purple?style=flat)
+![License](https://img.shields.io/github/license/Castafili/Progetto-Procedurale-25-26?style=flat)
+![Status](https://img.shields.io/badge/status-active%20development-4c1?style=flat)
+
+---
+
 ## 🌀 Cosestrane
 **Cosestrane** is a text-based adventure game written in C, inspired by the TV series *Stranger Things*. This project was made for the Procedural Programming exam (A.Y. 2025/2026).
 

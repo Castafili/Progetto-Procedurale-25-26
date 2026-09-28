@@ -652,7 +652,7 @@ void imposta_gioco() {
         giocatori[i] -> pos_soprasotto = NULL;
     }
 
-    // Menu creaazione mappa
+    // Menu creazione mappa
     printf("\n=== Creazione Mappa ===\n");
     int scelta_mappa;
 
@@ -746,6 +746,20 @@ static void stampa_zona_corrente(int indice) {
 
 }
 
+static void spoiler(int indice) {
+    if (giocatori[indice] == NULL) return;
+
+    Giocatore *g = giocatori[indice];
+    printf("\n===== SPOILER =====\n");
+    if (g -> mondo == 0 && g -> pos_mondoreale != NULL) {
+        printf("Il nemico nel Soprassotto corrispondente è: %s\n", nome_tipo_nemico(g -> pos_mondoreale -> link_soprasotto -> nemico));
+    }
+    else if (g -> mondo == 1 && g -> pos_soprasotto != NULL) {
+        printf("Il nemico nel Mondo Reale corrispondente è: %s\n", nome_tipo_nemico(g -> pos_soprasotto -> link_mondoreale -> nemico));
+    }
+    
+    return;
+}
 
 static int combatti_nemico(int indice, Tipo_nemico nemico, int *bonus_attacco_temp) {
     if (nemico == nessun_nemico) {
@@ -1212,7 +1226,8 @@ void gioca() {
                 printf("5) Usa oggetto\n");
                 printf("6) Stampa giocatore\n");
                 printf("7) Stampa zona\n");
-                printf("8) Passa il turno\n");
+                printf("8) Spoiler\n");
+                printf("9) Passa il turno\n");
                 printf("Scelta: ");
                 
                 int scelta;
@@ -1294,8 +1309,12 @@ void gioca() {
                     case 7:
                         stampa_zona_corrente(indice);
                         break;
-                        
+
                     case 8:
+                        spoiler(indice);
+                        break;
+                        
+                    case 9:
                         printf("Passi il turno.\n");
                         turno_finito = 1;
                         break;
